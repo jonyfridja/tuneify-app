@@ -1,12 +1,11 @@
 import express from 'express';
+import tuneService from './services/tune.service';
 const app = express();
-
-console.log('express');
 
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-  res.send('hw');
+  res.json(tuneService.query());
 });
 
 app.listen(PORT, () => {
