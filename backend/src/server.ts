@@ -1,7 +1,7 @@
 import express from 'express';
 import session from 'express-session';
 import bodyParser from 'body-parser';
-
+import path from 'path';
 
 import tuneRouter from './api/tune/tune.route';
 import authRouter from './api/auth/auth.route';
@@ -20,6 +20,7 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.use('/api/tune', tuneRouter);
 app.use('/api', authRouter);
@@ -32,9 +33,10 @@ app.use('/api', authRouter);
 //   }
 // })
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
++app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
+
 app.listen(PORT, () => {
   console.log('listening at PORT:', PORT);
 });
