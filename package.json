@@ -1,0 +1,12 @@
+{
+  "name": "tuneify-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "engines": {
+    "node": "12.x"
+  },
+  "scripts": {},
+  "author": "Jonathan Fridja",
+  "license": "ISC"
+}
