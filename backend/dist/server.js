@@ -6,19 +6,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const express_session_1 = __importDefault(require("express-session"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const tune_route_1 = __importDefault(require("./routes/tune.route"));
-const auth_route_1 = __importDefault(require("./routes/auth.route"));
+const tune_route_1 = __importDefault(require("./api/tune/tune.route"));
+const auth_route_1 = __importDefault(require("./api/auth/auth.route"));
 const app = express_1.default();
 app.use(express_session_1.default({
-    secret: 'keyboard cat',
+    secret: 'tunes are awesome',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true }
+    cookie: { secure: false }
 }));
 app.use(body_parser_1.default.json());
+app.use(express_1.default.static('public'));
 const PORT = process.env.PORT || 3000;
 app.use('/api/tune', tune_route_1.default);
 app.use('/api', auth_route_1.default);
+// app.get('/', (req, res) => {
+//   try {
+//     res.sendFile('./app/index.html');
+//   } catch (err) {
+//     res.status(401).json(err)
+//   }
+// })
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+});
 app.listen(PORT, () => {
     console.log('listening at PORT:', PORT);
 });

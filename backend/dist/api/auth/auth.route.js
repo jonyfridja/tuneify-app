@@ -13,27 +13,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const auth_service_1 = __importDefault(require("../services/auth.service"));
-const message_service_1 = require("../services/message.service");
+const auth_service_1 = __importDefault(require("./auth.service"));
+const message_service_1 = require("../../services/message.service");
 const router = express_1.default.Router();
+// src for chosing 409 https://www.shorturl.at/npBCT
 // LOGIN
 router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // not already logged in!
-    // src for chosing 409 https://www.shorturl.at/npBCT
     if (req.session.loggedInUser)
         return res.status(409).send(message_service_1.resMessages.alreadyLoggedIn);
-    const credentials = req.body;
+    const { username, password } = req.body;
     try {
-        const approvedCredentials = yield auth_service_1.default.login(credentials);
-        req.session.loggedInUser = approvedCredentials;
-        res.json(approvedCredentials);
+        const userDetails = yield auth_service_1.default.login(username, password);
+        req.session.loggedInUser = userDetails;
+        res.json(userDetails);
     }
     catch (err) {
+        res.status(401).json({ error: err });
         // TODO: handle unauthed users
     }
 }));
 router.post('/logout', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // src for chosing 409 https://www.shorturl.at/npBCT
     if (!req.session.loggedInUser)
         return res.status(409).json({ msg: message_service_1.resMessages.invalidLogout });
     req.session.destroy(function (err) {
@@ -46,12 +45,14 @@ router.post('/logout', (req, res) => __awaiter(void 0, void 0, void 0, function*
     });
 }));
 router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const credentials = req.body;
     try {
-        const newCredentials = yield auth_service_1.default.signup(credentials);
+        const newUser = req.body;
+        const user = yield auth_service_1.default.signup(newUser);
+        req.session.user = user;
+        res.status(200).send(user);
     }
     catch (err) {
-        res.status(500).json(err);
+        res.status(500).send({ error: 'could not signup, please try later' });
     }
 }));
 exports.default = router;

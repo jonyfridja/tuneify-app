@@ -1,9 +1,9 @@
-import Tune from '../models/Tune';
-import { reject, resolve, makeId } from './util.service';
-import { resMessages } from './message.service';
+import Tune from './Tune';
+import { reject, resolve, makeId } from '../../services/util.service';
+import { resMessages } from '../../services/message.service';
 
 
-const gTunes = <Tune[]>require('./tunes.json');
+const gTunes = <any[]>require('./tunes.json');
 
 export default {
     query,

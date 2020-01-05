@@ -8,5 +8,7 @@ exports.resMessages = {
     successSignup: 'Signed up successfuly',
     alreadyLoggedIn: 'User already logged in!',
     invalidLogout: 'Nothing to logout',
+    invalidCredentials: 'Invalid username or password!',
+    requiredCredentials: 'username and password are required!'
 };
 //# sourceMappingURL=message.service.js.map

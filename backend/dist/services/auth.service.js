@@ -15,7 +15,7 @@ function login(credentials) {
 function logout() {
     return util_service_1.resolve(message_service_1.resMessages.successLogout);
 }
-function signup() {
+function signup(credentials) {
     return util_service_1.resolve(message_service_1.resMessages.successSignup);
 }
 //# sourceMappingURL=auth.service.js.map

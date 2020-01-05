@@ -1,6 +1,6 @@
 import express from 'express';
-import tuneService from '../services/tune.service';
-import { resMessages } from '../services/message.service';
+import tuneService from './tune.service';
+import { resMessages } from '../../services/message.service';
 
 const router = express.Router();
 // LIST

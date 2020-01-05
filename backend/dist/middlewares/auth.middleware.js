@@ -9,10 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-function requiredLogin(req, res, next) {
+function requireAuth(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!req.session || !req.session.user) {
+            res.status(401).end('Unauthorized');
+            return;
+        }
         next();
     });
 }
-exports.requiredLogin = requiredLogin;
+exports.requireAuth = requireAuth;
 //# sourceMappingURL=auth.middleware.js.map
