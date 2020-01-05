@@ -1,0 +1,5 @@
+node_modules
+src/build
+
+# Usually not built - remove at the end
+# dist/*
