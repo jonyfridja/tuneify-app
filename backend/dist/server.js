@@ -17,8 +17,6 @@ app.use(express_session_1.default({
     cookie: { secure: false }
 }));
 app.use(body_parser_1.default.json());
-app.use(express_1.default.static('public'));
-const PORT = process.env.PORT || 3000;
 app.use(express_1.default.static(path_1.default.join(__dirname, 'build')));
 app.use('/api/tune', tune_route_1.default);
 app.use('/api', auth_route_1.default);
@@ -29,9 +27,11 @@ app.use('/api', auth_route_1.default);
 //     res.status(401).json(err)
 //   }
 // })
+app.use(express_1.default.static('public'));
 +app.get('/*', function (req, res) {
     res.sendFile(path_1.default.join(__dirname, 'build', 'index.html'));
 });
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log('listening at PORT:', PORT);
 });
