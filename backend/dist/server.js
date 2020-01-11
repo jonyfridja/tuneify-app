@@ -7,9 +7,15 @@ const express_1 = __importDefault(require("express"));
 const express_session_1 = __importDefault(require("express-session"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const path_1 = __importDefault(require("path"));
+const cors_1 = __importDefault(require("cors"));
 const tune_route_1 = __importDefault(require("./api/tune/tune.route"));
 const auth_route_1 = __importDefault(require("./api/auth/auth.route"));
 const app = express_1.default();
+var corsOptions = {
+    origin: 'http://localhost:3001',
+    credentials: true
+};
+app.use(cors_1.default(corsOptions));
 app.use(express_session_1.default({
     secret: 'tunes are awesome',
     resave: false,
@@ -28,11 +34,12 @@ app.use('/api', auth_route_1.default);
 //   }
 // })
 app.use(express_1.default.static('public'));
-+app.get('/*', function (req, res) {
-    res.sendFile(path_1.default.join(__dirname, 'build', 'index.html'));
-});
+// app.get('/*', function (req, res) {
+//   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// });
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
+    console.log('VERSION: 0.1.1');
     console.log('listening at PORT:', PORT);
 });
 //# sourceMappingURL=server.js.map

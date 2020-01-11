@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Tune {
-    constructor(tune) {
-        this._id = tune._id;
-        this.title = tune.title;
+    constructor({ _id, title }) {
+        this._id = _id;
+        this.title = title;
     }
 }
 exports.default = Tune;

@@ -2,11 +2,19 @@ import express from 'express';
 import session from 'express-session';
 import bodyParser from 'body-parser';
 import path from 'path';
+import cors from 'cors';
 
 import tuneRouter from './api/tune/tune.route';
 import authRouter from './api/auth/auth.route';
 
 const app = express();
+
+
+var corsOptions = {
+  origin: 'http://localhost:3001',
+  credentials: true
+}
+app.use(cors(corsOptions));
 
 app.use(session({
   secret: 'tunes are awesome',
@@ -31,12 +39,13 @@ app.use('/api', authRouter);
 
 app.use(express.static('public'));
 
-+app.get('/*', function (req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+// app.get('/*', function (req, res) {
+//   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// });
 
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
+  console.log('VERSION: 0.1.1');
   console.log('listening at PORT:', PORT);
 });
