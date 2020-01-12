@@ -19,11 +19,11 @@ const router = express_1.default.Router();
 // src for chosing 409 https://www.shorturl.at/npBCT
 // LOGIN
 router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (req.session.loggedInUser)
+    if (req.session.loggedInUser) {
         return res.status(409).send(message_service_1.resMessages.alreadyLoggedIn);
-    const { username, password } = req.body;
+    }
     try {
-        const userDetails = yield auth_service_1.default.login(username, password);
+        const userDetails = yield auth_service_1.default.login(req.body);
         req.session.loggedInUser = userDetails;
         res.json(userDetails);
     }
@@ -33,15 +33,14 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 }));
 router.post('/logout', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.session.loggedInUser)
+    if (!req.session.loggedInUser) {
         return res.status(409).json({ msg: message_service_1.resMessages.invalidLogout });
-    req.session.destroy(function (err) {
-        if (err) {
+    }
+    req.session.destroy(err => {
+        if (err)
             res.status(500).json({});
-        }
-        else {
+        else
             res.json({ msg: message_service_1.resMessages.successLogout });
-        }
     });
 }));
 router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* () {

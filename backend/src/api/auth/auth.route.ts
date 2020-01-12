@@ -9,39 +9,40 @@ const router = express.Router();
 
 // LOGIN
 router.post('/login', async (req, res) => {
-    if (req.session.loggedInUser) return res.status(409).send(resMessages.alreadyLoggedIn);
+  if (req.session.loggedInUser) {
+    return res.status(409).send(resMessages.alreadyLoggedIn);
+  }
 
-    const { username, password } = req.body;
-    try {
-        const userDetails = await authService.login(username, password);
-        req.session.loggedInUser = userDetails;
-        res.json(userDetails);
-    } catch (err) {
-        res.status(401).json({ error: err });
-        // TODO: handle unauthed users
-    }
+  try {
+    const userDetails = await authService.login(req.body);
+    req.session.loggedInUser = userDetails;
+    res.json(userDetails);
+  } catch (err) {
+    res.status(401).json({ error: err });
+    // TODO: handle unauthed users
+  }
 });
 
 router.post('/logout', async (req, res) => {
-    if (!req.session.loggedInUser) return res.status(409).json({ msg: resMessages.invalidLogout });
-    req.session.destroy(function (err) {
-        if (err) {
-            res.status(500).json({});
-        } else {
-            res.json({ msg: resMessages.successLogout });
-        }
-    });
+  if (!req.session.loggedInUser) {
+    return res.status(409).json({ msg: resMessages.invalidLogout });
+  }
+
+  req.session.destroy(err => {
+    if (err) res.status(500).json({});
+    else res.json({ msg: resMessages.successLogout });
+  });
 });
 
 router.post('/signup', async (req, res) => {
-    try {
-        const newUser = req.body
-        const user = await authService.signup(newUser);
-        req.session.user = user
-        res.status(200).send(user)
-    } catch (err) {
-        res.status(500).send({ error: 'could not signup, please try later' })
-    }
-})
+  try {
+    const newUser = req.body;
+    const user = await authService.signup(newUser);
+    req.session.user = user;
+    res.status(200).send(user);
+  } catch (err) {
+    res.status(500).send({ error: 'could not signup, please try later' });
+  }
+});
 
 export default router;

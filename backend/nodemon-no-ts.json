@@ -2,5 +2,5 @@
     "watch": ["./"],
     "ext": "ts",
     "ignore": ["src/**/*.spec.ts"],
-    "exec": "ts-node src/server.ts"
+    "exec": "node --inspect-brk=5858 dist/server.js"
   }

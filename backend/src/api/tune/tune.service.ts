@@ -2,6 +2,7 @@ import Tune from './Tune';
 import { reject, resolve, makeId } from '../../services/util.service';
 import { resMessages } from '../../services/message.service';
 
+import dbService from '../../services/db.service';
 
 const gTunes = <any[]>require('./tunes.json');
 
@@ -13,7 +14,19 @@ export default {
     add
 }
 
-function query(filterBy = {}): Promise<Tune[]> {
+async function query(filterBy: any = {}): Promise<Tune[]> {
+    const criteria = {};
+
+    if(filterBy.txt) {
+        // ...
+    }
+
+    try {
+        const collection = await _getCollection();
+        return await collection.find({}).toArray();
+    } catch (err) {
+        
+    }
     return resolve([...gTunes]);
 }
 
@@ -47,4 +60,8 @@ function add(tune: Tune) {
     tuneToAdd._id = makeId();
     gTunes.push(tuneToAdd);
     return resolve(tuneToAdd);
+}
+
+async function _getCollection() {
+    return dbService.getCollection(dbService.collections.tune); 
 }
