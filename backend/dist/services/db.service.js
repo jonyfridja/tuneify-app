@@ -23,7 +23,7 @@ function connect() {
         if (dbConn)
             return dbConn;
         try {
-            const client = yield mongodb_1.MongoClient.connect(url, { useNewUrlParser: true });
+            const client = yield mongodb_1.MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
             const db = client.db(dbName);
             dbConn = db;
             return db;

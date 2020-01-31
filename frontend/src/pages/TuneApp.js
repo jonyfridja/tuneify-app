@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import TuneList from '../cmps/Tune/TuneList';
 
 import { loadTunes } from '../actions';
+
+
 
 class TuneApp extends Component {
   componentDidMount() {
@@ -11,6 +14,7 @@ class TuneApp extends Component {
   render() {
     return (
       <div>
+        <TuneList tunes={this.props.tunes} />
         {this.props.tunes.map(tune => {
           return ' hello' + tune.title;
         })}
@@ -20,7 +24,6 @@ class TuneApp extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log('state in app', state);
   return {
     tunes: state.tune.items
   };

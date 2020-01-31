@@ -3,65 +3,75 @@ import { reject, resolve, makeId } from '../../services/util.service';
 import { resMessages } from '../../services/message.service';
 
 import dbService from '../../services/db.service';
+import { ObjectId } from 'mongodb';
 
 const gTunes = <any[]>require('./tunes.json');
 
 export default {
-    query,
-    getById,
-    update,
-    removeById,
-    add
-}
+  query,
+  getById,
+  update,
+  removeById,
+  add
+};
 
 async function query(filterBy: any = {}): Promise<Tune[]> {
-    const criteria = {};
+  const criteria = {};
 
-    if(filterBy.txt) {
-        // ...
-    }
+  if (filterBy.txt) {
+    // ...
+  }
 
-    try {
-        const collection = await _getCollection();
-        return await collection.find({}).toArray();
-    } catch (err) {
-        
-    }
-    return resolve([...gTunes]);
+  try {
+    const collection = await _getCollection();
+    return await collection.find({}).toArray();
+  } catch (err) {
+    console.log('err', err);
+    throw err;
+  }
 }
 
-function getById(id): Promise<Tune> {
-    const tune = gTunes.find(t => t._id === id)
-    if (tune) return resolve(tune);
-    return reject(resMessages.wrondId);
+async function getById(_id): Promise<Tune> {
+  const collection = await _getCollection();
+  try {
+    const tune = collection.findOne({ _id });
+    if (!tune) throw new Error('Tune not found');
+    return tune;
+  } catch (err) {
+    console.log('tune.service.js - getById:\n', err);
+    throw err;
+  }
 }
 
-function update(tune: Tune) {
-    const idx = gTunes.findIndex(t => t._id === tune._id);
-    if (idx === -1) return reject(resMessages.wrondId)
-
-    let tuneToUpdate = gTunes.find(t => t._id === tune._id);
-    //  new Tune filters unwanted properies - clean data, happy data
-    tuneToUpdate = new Tune(tune);
-    gTunes.splice(idx, 1, tuneToUpdate);
-
-    return resolve({ ...tuneToUpdate });
+async function update(tune: Tune) {
+  const { _id } = tune;
+  const collection = await _getCollection();
+  // Needs checking
+  try {
+    const res = await collection.findOneAndUpdate(
+      { _id: new ObjectId(_id) },
+      { ...tune }
+    );
+    return tune;
+  } catch (err) {}
 }
 
 function removeById(id): Promise<string> {
-    const idx = gTunes.findIndex(t => t._id === id);
-    if (idx === -1) return reject(resMessages.unknownId);
-    gTunes.splice(idx, 1);
-    return resolve(resMessages.successRemove);
+  const idx = gTunes.findIndex(t => t._id === id);
+  if (idx === -1) return reject(resMessages.unknownId);
+  gTunes.splice(idx, 1);
+  return resolve(resMessages.successRemove);
 }
 
-function add(tune: Tune) {
-    const tuneToAdd = new Tune(tune);
-    tuneToAdd._id = makeId();
-    gTunes.push(tuneToAdd);
-    return resolve(tuneToAdd);
+async function add(tune: Tune) { 
+  const collection = await _getCollection();
+  // Needs checking
+  try {
+    const res = await collection.insertOne(tune);
+    return tune;
+  } catch (err) {}
 }
 
-async function _getCollection() {
-    return dbService.getCollection(dbService.collections.tune); 
+async function _getCollection(collectionName = dbService.collections.tune) {
+  return dbService.getCollection(collectionName);
 }

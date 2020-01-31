@@ -61,7 +61,7 @@ function update(updatedUser) {
             const { _id } = updatedUser;
             const collection = yield _getCollection();
             // Needs checking
-            const res = yield collection.findOneAndUpdate({ _id: new mongodb_1.ObjectID(_id) }, Object.assign({}, updatedUser));
+            const res = yield collection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(_id) }, Object.assign({}, updatedUser));
             return updatedUser;
             // newUser._id = makeId();
             // gUsers.push(newUser);

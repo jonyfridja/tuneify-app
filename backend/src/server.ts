@@ -11,7 +11,7 @@ const app = express();
 
 
 var corsOptions = {
-  origin: 'http://localhost:3001',
+  origin: 'http://localhost:3000',
   credentials: true
 }
 app.use(cors(corsOptions));
@@ -27,29 +27,11 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.use('/api/tune', tuneRouter);
-app.use('/api', authRouter);
-
-// app.get('/', (req, res) => {
-//   try {
-//     res.sendFile('./app/index.html');
-//   } catch (err) {
-//     res.status(401).json(err)
-//   }
-// })
-
-
-
+app.use('/api/auth', authRouter);
 
 app.use(express.static('public'));
 
-
-
-// app.get('/*', function (req, res) {
-//   res.sendFile(path.join(__dirname, 'public', 'index.html'));
-// });
-
-
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3030;
 app.listen(PORT, () => {
   console.log('VERSION: 0.1.1');
   console.log('listening at PORT:', PORT);

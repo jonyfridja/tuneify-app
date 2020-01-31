@@ -12,10 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Tune_1 = __importDefault(require("./Tune"));
 const util_service_1 = require("../../services/util.service");
 const message_service_1 = require("../../services/message.service");
 const db_service_1 = __importDefault(require("../../services/db.service"));
+const mongodb_1 = require("mongodb");
 const gTunes = require('./tunes.json');
 exports.default = {
     query,
@@ -35,25 +35,37 @@ function query(filterBy = {}) {
             return yield collection.find({}).toArray();
         }
         catch (err) {
+            console.log('err', err);
+            throw err;
         }
-        return util_service_1.resolve([...gTunes]);
     });
 }
-function getById(id) {
-    const tune = gTunes.find(t => t._id === id);
-    if (tune)
-        return util_service_1.resolve(tune);
-    return util_service_1.reject(message_service_1.resMessages.wrondId);
+function getById(_id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const collection = yield _getCollection();
+        try {
+            const tune = collection.findOne({ _id });
+            if (!tune)
+                throw new Error('Tune not found');
+            return tune;
+        }
+        catch (err) {
+            console.log('tune.service.js - getById:\n', err);
+            throw err;
+        }
+    });
 }
 function update(tune) {
-    const idx = gTunes.findIndex(t => t._id === tune._id);
-    if (idx === -1)
-        return util_service_1.reject(message_service_1.resMessages.wrondId);
-    let tuneToUpdate = gTunes.find(t => t._id === tune._id);
-    //  new Tune filters unwanted properies - clean data, happy data
-    tuneToUpdate = new Tune_1.default(tune);
-    gTunes.splice(idx, 1, tuneToUpdate);
-    return util_service_1.resolve(Object.assign({}, tuneToUpdate));
+    return __awaiter(this, void 0, void 0, function* () {
+        const { _id } = tune;
+        const collection = yield _getCollection();
+        // Needs checking
+        try {
+            const res = yield collection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(_id) }, Object.assign({}, tune));
+            return tune;
+        }
+        catch (err) { }
+    });
 }
 function removeById(id) {
     const idx = gTunes.findIndex(t => t._id === id);
@@ -63,14 +75,19 @@ function removeById(id) {
     return util_service_1.resolve(message_service_1.resMessages.successRemove);
 }
 function add(tune) {
-    const tuneToAdd = new Tune_1.default(tune);
-    tuneToAdd._id = util_service_1.makeId();
-    gTunes.push(tuneToAdd);
-    return util_service_1.resolve(tuneToAdd);
-}
-function _getCollection() {
     return __awaiter(this, void 0, void 0, function* () {
-        return db_service_1.default.getCollection(db_service_1.default.collections.tune);
+        const collection = yield _getCollection();
+        // Needs checking
+        try {
+            const res = yield collection.insertOne(tune);
+            return tune;
+        }
+        catch (err) { }
+    });
+}
+function _getCollection(collectionName = db_service_1.default.collections.tune) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return db_service_1.default.getCollection(collectionName);
     });
 }
 //# sourceMappingURL=tune.service.js.map

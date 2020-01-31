@@ -8,7 +8,11 @@ export function loadTunes() {
   };
 }
 
-// ACTIONS
+function _setTune(tune) {
+  return { type: 'SET_TUNE', tune }
+}
+
+// ACTION CREATORS
 function _setTunes(items) {
   return { type: 'SET_TUNES', items };
 }

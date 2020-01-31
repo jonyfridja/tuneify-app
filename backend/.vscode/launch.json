@@ -7,12 +7,16 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}\\dist\\server.js",
-      "preLaunchTask": "npm: build",
-      "console": "externalTerminal",
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+      "name": "nodemon",
+      "runtimeExecutable": "nodemon",
+      "program": "${workspaceFolder}/dist/server.js",
+      "restart": true,
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     }
   ]
+
 }

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const tune_service_1 = __importDefault(require("./tune.service"));
 const message_service_1 = require("../../services/message.service");
+const db_service_1 = __importDefault(require("../../services/db.service"));
 const router = express_1.default.Router();
 // LIST
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -80,5 +81,8 @@ router.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(404).json({ err });
     }
 }));
+function _getCollection(collectionName = db_service_1.default.collections.tune) {
+    return db_service_1.default.getCollection(collectionName);
+}
 exports.default = router;
 //# sourceMappingURL=tune.route.js.map

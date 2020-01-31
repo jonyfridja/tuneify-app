@@ -1,10 +1,10 @@
 import bcrypt from 'bcrypt';
 
-import { resolve, reject } from '../../services/util.service';
+import { reject } from '../../services/util.service';
 import dbService from '../../services/db.service';
 
 import User from './User';
-import { ObjectID } from 'mongodb';
+import { ObjectId } from 'mongodb';
 
 export default {
   getByUsername,
@@ -46,7 +46,7 @@ async function update(updatedUser: User) {
     const collection = await _getCollection();
     // Needs checking
     const res = await collection.findOneAndUpdate(
-      { _id: new ObjectID(_id) },
+      { _id: new ObjectId(_id) },
       { ...updatedUser }
     );
     return updatedUser;
